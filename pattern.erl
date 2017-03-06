@@ -10,6 +10,9 @@ xOr2(A,B) ->
 xOr3(A,B) ->
  (not A and B)or(not B and A).
 
+xOr4(A,B)->
+  
+
 maxThree(A,B,C) ->
  max(A,max(B,C)).
 
