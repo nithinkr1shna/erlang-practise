@@ -1,6 +1,11 @@
 -module(take).
 -export([take/2]).
 
+%%---takes first N elements --
+%%--- from a list-------------
+%%--- usage-------------------
+%%-- take(2,"hello")----------
+%%--------"he"----------------
 
 take(_,[]) ->
  [];
