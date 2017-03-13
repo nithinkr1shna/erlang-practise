@@ -7,7 +7,7 @@
 %
 
 play_two(StrategyL,StrategyR,N) ->
-    play_two(StrategyL,StrategyR,[],[],N).
+    play_two(StrategyL,StrategyR,[],[],N,0).
 
 % tail recursive loop for play_two/3
 % 0 case computes the result of the tournament
@@ -15,11 +15,16 @@ play_two(StrategyL,StrategyR,N) ->
 % FOR YOU TO DEFINE
 % REPLACE THE dummy DEFINITIONS
 
-play_two(_,_,PlaysL,PlaysR,0) ->
-   dummy;
+play_two(_,_,PlaysL,PlaysR,0,Acc) ->
+    io:format("strategy vs strategy -Game ended~n"),
+    decisionSvS(Acc);
 
-play_two(StrategyL,StrategyR,PlaysL,PlaysR,N) ->
-   dummy.
+play_two(StrategyL,StrategyR,PlaysL,PlaysR,N,Acc) ->
+    RightMove = StrategyL(PlaysR),
+    LeftMove = StrategyR(PlaysR),
+    Match_result= outcome(result(LeftMove, RightMove)),
+    Acc1 = Acc+ Match_result,
+    play_two(StrategyL,StrategyR,PlaysL,PlaysR,N-1,Acc1).
 
 %
 % interactively play against a strategy, provided as argument.
@@ -29,25 +34,48 @@ play(Strategy) ->
     io:format("Rock - paper - scissors~n"),
     io:format("Play one of rock, paper, scissors, ...~n"),
     io:format("... r, p, s, stop, followed by '.'~n"),
-    play(Strategy,[]).
+    play(Strategy,[],0).
 
 % tail recursive loop for play/1
 
-play(Strategy,Moves) ->
+play(Strategy,Moves,Acc) ->
     {ok,P} = io:read("Play: "),
     Play = expand(P),
     case Play of
 	stop ->
-	    io:format("Stopped~n");
+	    io:format("Stopped~n"),
+            decision(Acc);
 	_    ->
 	    Result = result(Play,Strategy(Moves)),
+            Acc1 = Acc+outcome(Result),
 	    io:format("Result: ~p~n",[Result]),
-	    play(Strategy,[Play|Moves])
+	    play(Strategy,[Play|Moves],Acc1)
     end.
 
 %
 % auxiliary functions
 %
+ 
+%result decision for game strategy vs strategy defined by play_two/3
+
+decisionSvS(0)->
+    'Result :  The game is a draw';
+decisionSvS(A) when A > 0->
+    'Result :  Strategy 1 won';
+decisionSvS(A) when A<0 ->
+    'Result :  Strategy 2 won'.
+
+
+%result decision for game play/1
+
+decision(0)->
+    'The game is a draw';    
+decision(A) when A > 0 ->
+     '**********The Player won*********';
+decision(A) when A < 0 ->
+    'The Machine won'.
+
+
 
 % transform shorthand atoms to expanded form
     
