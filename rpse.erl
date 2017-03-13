@@ -133,7 +133,7 @@ const(Play) ->
     dummy.
 
 cycle(Xs) ->
-   
+    lists:nth(1 + length(Xs) rem 3, [rock,paper,scissors]).
 
  
 rand([]) ->
